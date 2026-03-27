@@ -17,30 +17,67 @@
     });
   }
 
-  // Sync when OS preference changes (and no manual override stored)
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-    if (!localStorage.getItem('theme')) {
-      setTheme(e.matches ? 'dark' : 'light');
-    }
+    if (!localStorage.getItem('theme')) setTheme(e.matches ? 'dark' : 'light');
   });
+
+  // ── Last Updated ─────────────────────────────────────
+  const now = new Date();
+  const fmt = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  document.querySelectorAll('#lastUpdated, #lastUpdatedFull').forEach(el => {
+    el.textContent = 'Updated ' + fmt;
+  });
+
+  // ── Smooth Scroll Nav ─────────────────────────────────
+  document.querySelectorAll('.nav-link[data-section]').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.getElementById(link.dataset.section);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // ── Scroll Spy ────────────────────────────────────────
+  const sections  = ['about', 'experience', 'writing', 'projects', 'contact']
+    .map(id => document.getElementById(id))
+    .filter(Boolean);
+
+  const navLinks  = document.querySelectorAll('.nav-link[data-section]');
+
+  function setActiveNav(id) {
+    navLinks.forEach(l => l.classList.toggle('active', l.dataset.section === id));
+  }
+
+  // Use IntersectionObserver — fire when section is ≥10% visible
+  const spyObserver = new IntersectionObserver(
+    entries => {
+      // Pick the topmost intersecting section
+      const visible = entries
+        .filter(e => e.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (visible.length) setActiveNav(visible[0].target.id);
+    },
+    { rootMargin: '-10% 0px -60% 0px', threshold: 0 }
+  );
+
+  sections.forEach(s => spyObserver.observe(s));
+
+  // Set first nav link active on load
+  setActiveNav('about');
 
   // ── Tag Filter ────────────────────────────────────────
   const pills     = document.querySelectorAll('.skill-pill[data-skill]');
   const cards     = document.querySelectorAll('.project-card[data-tags]');
   const resetBtns = document.querySelectorAll('#resetFilter, #resetFilter2');
   const noResults = document.getElementById('noResults');
-  const noResultsSkillLabel = document.getElementById('noResultsSkill');
+  const noResultsLabel = document.getElementById('noResultsSkill');
 
   let activeSkill = null;
 
   pills.forEach(pill => {
     pill.addEventListener('click', () => {
       const skill = pill.dataset.skill;
-      if (activeSkill === skill) {
-        clearFilter();
-      } else {
-        activateFilter(skill);
-      }
+      activeSkill === skill ? clearFilter() : activateFilter(skill);
     });
   });
 
@@ -48,98 +85,94 @@
 
   function activateFilter(skill) {
     activeSkill = skill;
-
     pills.forEach(p => {
       p.classList.remove('active', 'dimmed');
       p.classList.add(p.dataset.skill === skill ? 'active' : 'dimmed');
     });
 
-    let matchCount = 0;
+    let count = 0;
     cards.forEach(card => {
-      const tags = card.dataset.tags.split(',').map(t => t.trim());
-      const match = tags.includes(skill);
+      const match = card.dataset.tags.split(',').map(t => t.trim()).includes(skill);
       card.classList.toggle('hidden', !match);
-      if (match) matchCount++;
+      if (match) count++;
     });
 
-    resetBtns.forEach(btn => btn.removeAttribute('hidden'));
+    resetBtns.forEach(b => b.removeAttribute('hidden'));
 
-    if (matchCount === 0) {
-      noResultsSkillLabel.textContent = `"${skill}"`;
+    if (count === 0) {
+      noResultsLabel.textContent = `"${skill}"`;
       noResults.removeAttribute('hidden');
     } else {
       noResults.setAttribute('hidden', '');
     }
+
+    // Scroll to projects section when filter activates
+    document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   function clearFilter() {
     activeSkill = null;
     pills.forEach(p => p.classList.remove('active', 'dimmed'));
-    cards.forEach(card => card.classList.remove('hidden'));
-    resetBtns.forEach(btn => btn.setAttribute('hidden', ''));
+    cards.forEach(c => c.classList.remove('hidden'));
+    resetBtns.forEach(b => b.setAttribute('hidden', ''));
     noResults.setAttribute('hidden', '');
   }
 
-  // ── IntersectionObserver Fade-In ───────────────────────
-  const fadeEls = document.querySelectorAll('.fade-card, .fade-section');
+  // ── Fade-In (sections + cards) ────────────────────────
+  const fadeEls = document.querySelectorAll('.fade-section, .fade-card');
 
   if ('IntersectionObserver' in window) {
-    const observer = new IntersectionObserver(
+    const fadeObserver = new IntersectionObserver(
       entries => {
         entries.forEach((entry, i) => {
-          if (entry.isIntersecting) {
-            const delay = entry.target.classList.contains('fade-section') ? 0 : i * 60;
-            setTimeout(() => entry.target.classList.add('visible'), delay);
-            observer.unobserve(entry.target);
-          }
+          if (!entry.isIntersecting) return;
+          const delay = entry.target.classList.contains('fade-card') ? i * 55 : 0;
+          setTimeout(() => entry.target.classList.add('visible'), delay);
+          fadeObserver.unobserve(entry.target);
         });
       },
       { threshold: 0.06, rootMargin: '0px 0px -20px 0px' }
     );
-
-    fadeEls.forEach(el => observer.observe(el));
+    fadeEls.forEach(el => fadeObserver.observe(el));
   } else {
     fadeEls.forEach(el => el.classList.add('visible'));
   }
 
-  // ── Language bar animation ────────────────────────────
+  // ── Language Bar Animation ────────────────────────────
   const langFills = document.querySelectorAll('.lang-fill');
 
   if ('IntersectionObserver' in window) {
     const langObserver = new IntersectionObserver(
       entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate');
-            langObserver.unobserve(entry.target);
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('animate');
+            langObserver.unobserve(e.target);
           }
         });
       },
-      { threshold: 0.5 }
+      { threshold: 0.8 }
     );
-    langFills.forEach(bar => langObserver.observe(bar));
+    langFills.forEach(f => langObserver.observe(f));
   } else {
-    langFills.forEach(bar => bar.classList.add('animate'));
+    langFills.forEach(f => f.classList.add('animate'));
   }
 
-  // ── Copy Email ────────────────────────────────────────
-  const copyEmailBtn = document.querySelector('.copy-email');
-
-  if (copyEmailBtn) {
-    copyEmailBtn.addEventListener('click', () => {
-      const email = copyEmailBtn.dataset.email;
+  // ── Copy Email (sidebar + contact section) ────────────
+  function attachCopyEmail(btn) {
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      const email = btn.dataset.email;
       if (!email) return;
 
       const show = () => {
-        copyEmailBtn.classList.add('copied');
-        setTimeout(() => copyEmailBtn.classList.remove('copied'), 2000);
+        btn.classList.add('copied');
+        setTimeout(() => btn.classList.remove('copied'), 2000);
       };
 
       navigator.clipboard.writeText(email).then(show).catch(() => {
-        // Fallback for older browsers
         const ta = Object.assign(document.createElement('textarea'), {
-          value: email,
-          style: 'position:fixed;opacity:0',
+          value: email, style: 'position:fixed;opacity:0',
         });
         document.body.appendChild(ta);
         ta.select();
@@ -149,4 +182,6 @@
       });
     });
   }
+
+  document.querySelectorAll('.copy-email').forEach(attachCopyEmail);
 })();
