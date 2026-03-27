@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,6 +13,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <!-- Prevent flash of wrong theme -->
+  <script>
+    (function () {
+      const saved = localStorage.getItem('theme');
+      const sys = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.dataset.theme = saved || sys;
+    })();
+  </script>
 </head>
 <body>
   <div class="layout">
@@ -44,6 +52,11 @@
         <a href="https://hahuy.site" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Terminal portfolio" role="listitem" title="Visit terminal portfolio">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
         </a>
+        <!-- Dark mode toggle -->
+        <button class="social-link theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+          <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
       </div>
 
       <div class="skills-section">
@@ -77,122 +90,226 @@
     <!-- ═══════════════════════════ MAIN ═══════════════════════════ -->
     <main class="content">
 
-      <div class="content-header">
-        <h2 class="content-title">Projects</h2>
-        <button class="reset-btn" id="resetFilter" hidden aria-label="Clear skill filter">
-          Clear filter
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-      </div>
+      <!-- ══════════ ABOUT SECTION ══════════ -->
+      <section class="about-section fade-section" id="about">
 
-      <div class="projects-grid" id="projectsGrid">
+        <div class="about-intro">
+          <p class="about-lead">
+            Hi — I'm <strong>hahuy</strong>, a developer and engineer based in Vietnam.
+            I craft things for the fun of it and beyond: fast, elegant, and purposeful.
+          </p>
+          <p class="about-body">
+            I started programming because I wanted to understand how things worked.
+            That curiosity hasn't stopped — whether it's a new language, an obscure protocol,
+            or a better way to architect a system, I'm always exploring. Right now I'm
+            especially interested in the overlap of <em>quantum computing</em>, <em>machine learning</em>,
+            and <em>systems-level engineering</em>.
+          </p>
+        </div>
 
-        <!-- ── Card 1: 4FF-HH ── -->
-        <article class="project-card fade-card" data-tags="JavaScript,Node.js,Vite,Terminal,HTML/CSS">
-          <a href="https://hahuy.site" target="_blank" rel="noopener noreferrer" class="card-image-link" tabindex="-1" aria-hidden="true">
-            <div class="card-image card-image--cli" aria-label="4FF-HH terminal portfolio preview">
-              <div class="cli-preview">
-                <div class="cli-bar">
-                  <span class="cli-dot cli-dot--red"></span>
-                  <span class="cli-dot cli-dot--yellow"></span>
-                  <span class="cli-dot cli-dot--green"></span>
-                  <span class="cli-bar-title">hahuy.site — terminal</span>
-                </div>
-                <div class="cli-body">
-                  <p><span class="cli-prompt">~</span><span class="cli-cmd"> ls</span></p>
-                  <p class="cli-out">about/&nbsp;&nbsp;projects/&nbsp;&nbsp;skills/&nbsp;&nbsp;contact/</p>
-                  <p><span class="cli-prompt">~</span><span class="cli-cmd"> cat about/intro.txt</span></p>
-                  <p class="cli-out">Hi, I'm hahuy — a developer,</p>
-                  <p class="cli-out">builder, and over-engineer.</p>
-                  <p><span class="cli-prompt">~</span><span class="cli-cursor">▋</span></p>
+        <div class="about-grid">
+
+          <div class="about-card">
+            <div class="about-card-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </div>
+            <h3 class="about-card-title">Frontend</h3>
+            <ul class="about-card-list">
+              <li>Vanilla JS · React · Next.js</li>
+              <li>CSS architecture &amp; design systems</li>
+              <li>Accessibility &amp; performance</li>
+            </ul>
+          </div>
+
+          <div class="about-card">
+            <div class="about-card-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </div>
+            <h3 class="about-card-title">Backend</h3>
+            <ul class="about-card-list">
+              <li>Node.js · Express · FastAPI</li>
+              <li>PostgreSQL · SQLite · REST APIs</li>
+              <li>Docker · GitHub Actions</li>
+            </ul>
+          </div>
+
+          <div class="about-card">
+            <div class="about-card-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3 class="about-card-title">ML / Quantum</h3>
+            <ul class="about-card-list">
+              <li>Neural network architecture</li>
+              <li>LLM optimization &amp; deployment</li>
+              <li>Qiskit · Cirq · Braket</li>
+            </ul>
+          </div>
+
+          <div class="about-card">
+            <div class="about-card-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <h3 class="about-card-title">Currently</h3>
+            <ul class="about-card-list">
+              <li>Learning Assembly &amp; Rust</li>
+              <li>Exploring robotic &amp; quantum algos</li>
+              <li>Drinking too much coffee ☕</li>
+            </ul>
+          </div>
+
+        </div>
+
+        <div class="about-langs">
+          <h2 class="sidebar-label">Languages</h2>
+          <div class="langs-grid">
+            <div class="lang-bar">
+              <span class="lang-name">JavaScript</span>
+              <div class="lang-track"><div class="lang-fill" style="--pct:88%" data-label="Proficient"></div></div>
+            </div>
+            <div class="lang-bar">
+              <span class="lang-name">Python</span>
+              <div class="lang-track"><div class="lang-fill" style="--pct:82%" data-label="Proficient"></div></div>
+            </div>
+            <div class="lang-bar">
+              <span class="lang-name">HTML / CSS</span>
+              <div class="lang-track"><div class="lang-fill" style="--pct:92%" data-label="Daily driver"></div></div>
+            </div>
+            <div class="lang-bar">
+              <span class="lang-name">C++</span>
+              <div class="lang-track"><div class="lang-fill lang-fill--mid" style="--pct:55%" data-label="Improving"></div></div>
+            </div>
+            <div class="lang-bar">
+              <span class="lang-name">Assembly</span>
+              <div class="lang-track"><div class="lang-fill lang-fill--low" style="--pct:28%" data-label="Learning"></div></div>
+            </div>
+            <div class="lang-bar">
+              <span class="lang-name">Rust</span>
+              <div class="lang-track"><div class="lang-fill lang-fill--low" style="--pct:20%" data-label="Learning"></div></div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ══════════ PROJECTS SECTION ══════════ -->
+      <section id="projects">
+        <div class="content-header">
+          <h2 class="content-title">Projects</h2>
+          <button class="reset-btn" id="resetFilter" hidden aria-label="Clear skill filter">
+            Clear filter
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+
+        <div class="projects-grid" id="projectsGrid">
+
+          <!-- ── Card 1: 4FF-HH ── -->
+          <article class="project-card fade-card" data-tags="JavaScript,Node.js,Vite,Terminal,HTML/CSS">
+            <a href="https://hahuy.site" target="_blank" rel="noopener noreferrer" class="card-image-link" tabindex="-1" aria-hidden="true">
+              <div class="card-image card-image--cli" aria-label="4FF-HH terminal portfolio preview">
+                <div class="cli-preview">
+                  <div class="cli-bar">
+                    <span class="cli-dot cli-dot--red"></span>
+                    <span class="cli-dot cli-dot--yellow"></span>
+                    <span class="cli-dot cli-dot--green"></span>
+                    <span class="cli-bar-title">hahuy.site — terminal</span>
+                  </div>
+                  <div class="cli-body">
+                    <p><span class="cli-prompt">~</span><span class="cli-cmd"> ls</span></p>
+                    <p class="cli-out">about/&nbsp;&nbsp;projects/&nbsp;&nbsp;skills/&nbsp;&nbsp;contact/</p>
+                    <p><span class="cli-prompt">~</span><span class="cli-cmd"> cat about/intro.txt</span></p>
+                    <p class="cli-out">Hi, I'm hahuy — a developer,</p>
+                    <p class="cli-out">builder, and over-engineer.</p>
+                    <p><span class="cli-prompt">~</span><span class="cli-cursor">▋</span></p>
+                  </div>
                 </div>
               </div>
+            </a>
+            <div class="card-body">
+              <h3 class="card-title">
+                <a href="https://hahuy.site" target="_blank" rel="noopener noreferrer">4FF-HH CLI Portfolio</a>
+              </h3>
+              <div class="card-tags" aria-label="Technologies">
+                <span class="tag tag-js">JavaScript</span>
+                <span class="tag tag-py">Node.js</span>
+                <span class="tag tag-devops">Vite</span>
+                <span class="tag tag-default">Terminal</span>
+              </div>
+              <p class="card-desc">
+                An interactive terminal-style portfolio built with vanilla JavaScript and Vite.
+                Navigate using typed commands to explore projects, skills, and contact info —
+                all in a retro CLI aesthetic.
+              </p>
+              <div class="card-links">
+                <a href="https://hahuy.site" target="_blank" rel="noopener noreferrer" class="card-link card-link--primary">
+                  Visit Live
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                </a>
+                <a href="https://github.com/hahahuy/4FF-HH" target="_blank" rel="noopener noreferrer" class="card-link">
+                  GitHub
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                </a>
+              </div>
             </div>
-          </a>
-          <div class="card-body">
-            <h3 class="card-title">
-              <a href="https://hahuy.site" target="_blank" rel="noopener noreferrer">4FF-HH CLI Portfolio</a>
-            </h3>
-            <div class="card-tags" aria-label="Technologies">
-              <span class="tag tag-js">JavaScript</span>
-              <span class="tag tag-py">Node.js</span>
-              <span class="tag tag-devops">Vite</span>
-              <span class="tag tag-default">Terminal</span>
-            </div>
-            <p class="card-desc">
-              An interactive terminal-style portfolio built with vanilla JavaScript and Vite.
-              Navigate using typed commands to explore projects, skills, and contact info —
-              all in a retro CLI aesthetic.
-            </p>
-            <div class="card-links">
-              <a href="https://hahuy.site" target="_blank" rel="noopener noreferrer" class="card-link card-link--primary">
-                Visit Live
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-              </a>
-              <a href="https://github.com/hahahuy/4FF-HH" target="_blank" rel="noopener noreferrer" class="card-link">
-                GitHub
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-              </a>
-            </div>
-          </div>
-        </article>
+          </article>
 
-        <!-- ── Card 2: Placeholder ── -->
-        <article class="project-card fade-card" data-tags="Python,ML/AI">
-          <div class="card-image card-image--placeholder card-image--grad1" aria-label="Project coming soon">
-            <div class="placeholder-label">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-              Coming Soon
+          <!-- ── Card 2: Placeholder ── -->
+          <article class="project-card fade-card" data-tags="Python,ML/AI">
+            <div class="card-image card-image--placeholder card-image--grad1" aria-label="Project coming soon">
+              <div class="placeholder-label">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Coming Soon
+              </div>
             </div>
-          </div>
-          <div class="card-body">
-            <h3 class="card-title card-title--muted">ML / AI Project</h3>
-            <div class="card-tags" aria-label="Technologies">
-              <span class="tag tag-py">Python</span>
-              <span class="tag tag-ai">ML / AI</span>
+            <div class="card-body">
+              <h3 class="card-title card-title--muted">ML / AI Project</h3>
+              <div class="card-tags" aria-label="Technologies">
+                <span class="tag tag-py">Python</span>
+                <span class="tag tag-ai">ML / AI</span>
+              </div>
+              <p class="card-desc card-desc--muted">
+                A machine learning project in progress. Exploring neural architecture design
+                and LLM optimization techniques.
+              </p>
+              <div class="card-links">
+                <span class="card-link card-link--disabled" aria-disabled="true">In Progress</span>
+              </div>
             </div>
-            <p class="card-desc card-desc--muted">
-              A machine learning project in progress. Exploring neural architecture design
-              and LLM optimization techniques.
-            </p>
-            <div class="card-links">
-              <span class="card-link card-link--disabled" aria-disabled="true">In Progress</span>
-            </div>
-          </div>
-        </article>
+          </article>
 
-        <!-- ── Card 3: Placeholder ── -->
-        <article class="project-card fade-card" data-tags="React,FastAPI,Docker,CI/CD">
-          <div class="card-image card-image--placeholder card-image--grad2" aria-label="Project coming soon">
-            <div class="placeholder-label">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-              Coming Soon
+          <!-- ── Card 3: Placeholder ── -->
+          <article class="project-card fade-card" data-tags="React,FastAPI,Docker,CI/CD">
+            <div class="card-image card-image--placeholder card-image--grad2" aria-label="Project coming soon">
+              <div class="placeholder-label">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Coming Soon
+              </div>
             </div>
-          </div>
-          <div class="card-body">
-            <h3 class="card-title card-title--muted">Full-Stack App</h3>
-            <div class="card-tags" aria-label="Technologies">
-              <span class="tag tag-web">React</span>
-              <span class="tag tag-py">FastAPI</span>
-              <span class="tag tag-devops">Docker</span>
+            <div class="card-body">
+              <h3 class="card-title card-title--muted">Full-Stack App</h3>
+              <div class="card-tags" aria-label="Technologies">
+                <span class="tag tag-web">React</span>
+                <span class="tag tag-py">FastAPI</span>
+                <span class="tag tag-devops">Docker</span>
+              </div>
+              <p class="card-desc card-desc--muted">
+                A full-stack application built with React and FastAPI. Containerized with
+                Docker and deployed via CI/CD pipeline.
+              </p>
+              <div class="card-links">
+                <span class="card-link card-link--disabled" aria-disabled="true">In Progress</span>
+              </div>
             </div>
-            <p class="card-desc card-desc--muted">
-              A full-stack application built with React and FastAPI. Containerized with
-              Docker and deployed via CI/CD pipeline.
-            </p>
-            <div class="card-links">
-              <span class="card-link card-link--disabled" aria-disabled="true">In Progress</span>
-            </div>
-          </div>
-        </article>
+          </article>
 
-      </div>
+        </div>
 
-      <!-- No results -->
-      <div class="no-results" id="noResults" hidden>
-        <p>No projects match <strong id="noResultsSkill"></strong> yet.</p>
-        <button class="reset-btn" id="resetFilter2">Clear filter</button>
-      </div>
+        <!-- No results -->
+        <div class="no-results" id="noResults" hidden>
+          <p>No projects match <strong id="noResultsSkill"></strong> yet.</p>
+          <button class="reset-btn" id="resetFilter2">Clear filter</button>
+        </div>
+      </section>
 
     </main>
 
